@@ -5,6 +5,12 @@
 
 **TOSense** is a Chrome browser extension that demonstrates a proof-of-concept workflow for analyzing website Terms of Service (TOS) using a large language model (LLM). It enables basic LLM-powered interaction with TOS content, designed for academic exploration, prototyping, and feedback-driven development.
 
+TOSense is part of the following research paper:
+
+> **"ToSense: We Read, You Click"**\
+> *Xinzhang Chen, Hassan Ali, Arash Shaghaghi, Salil S. Kanhere, Sanjay Jha*\
+> *Under review at IEEE/IFIP DSN 2025*
+
 > ⚠️ This is a **proof-of-concept** version. The current release focuses on demonstrating the workflow and integration with an external server hosting our LLM backend.
 
 ---
@@ -13,7 +19,6 @@
 
 - 🧠 Simple LLM-based interface for querying Terms of Service
 - 🔄 Communicates with a backend server to demonstrate the TOS-to-LLM pipeline
-- 🔌 Easily extensible Chrome extension framework
 - 🛠️ Ideal for research demonstrations and future feature prototyping
 
 ---
@@ -75,7 +80,7 @@ https://github.com/user-attachments/assets/67a9b9cc-6e47-41c1-a8fa-96fbdab6213c
 
 ## 🛑 Current Limitations
 
-- ❌ Does not detect or extract TOS from arbitrary web pages (but we already have the pipeline; more info checkout [tos-crawl](https://github.com/Xinzhang-Chen/tos-crawl))
+- ❌ Does not detect or extract TOS from arbitrary web pages (but we already have the key component; more info checkout [tos-crawl](https://github.com/Xinzhang-Chen/tos-crawl))
 - ❌ Does not provide fast access to pre-crawled TOS repositories
 - 🐢 It relies on a low-powered backend for LLM responses
 - 🌐 LLM model is a reduced version for performance reasons
