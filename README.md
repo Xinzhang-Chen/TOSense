@@ -75,7 +75,7 @@ https://github.com/user-attachments/assets/67a9b9cc-6e47-41c1-a8fa-96fbdab6213c
 
 ## 🛑 Current Limitations
 
-- ❌ Does not detect or extract TOS from arbitrary web pages
+- ❌ Does not detect or extract TOS from arbitrary web pages (but we already have the pipeline; more info checkout [tos-crawl](https://github.com/Xinzhang-Chen/tos-crawl))
 - ❌ Does not provide fast access to pre-crawled TOS repositories
 - 🐢 It relies on a low-powered backend for LLM responses
 - 🌐 LLM model is a reduced version for performance reasons
