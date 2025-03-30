@@ -57,7 +57,7 @@ https://github.com/user-attachments/assets/67a9b9cc-6e47-41c1-a8fa-96fbdab6213c
 4. Send the question.
 5. View the LLM-generated response in the popup interface.
 
-> ⚠️ The current server is hosted on a low-spec personal machine. Expect possible delays or limited performance in LLM responses.
+> ⚠️ The current server is hosted on a low-spec testing server. Expect possible delays or limited performance in LLM responses. Server will be adjusted in the next iteration.
 
 > ⚠️ Please note that the provided version will not use the ToS content extract from the current page; all the answers returned from the server will base on our pre-loaded
 > LinkedIn ToS document. (Due to computing power limitations)
@@ -85,7 +85,7 @@ https://github.com/user-attachments/assets/67a9b9cc-6e47-41c1-a8fa-96fbdab6213c
 - 🐢 It relies on a low-powered backend for LLM responses
 - 🌐 LLM model is a reduced version for performance reasons
 
-These will be addressed in future versions.
+The next version of the tool will focus on addressing these limitations.
 
 ---
 
@@ -94,7 +94,7 @@ These will be addressed in future versions.
 
 This tool is provided solely for **non-commercial, academic research, and demonstration** purposes. The maintainers do not guarantee the performance, uptime, or accuracy of the LLM responses, especially under heavy usage.
 
-> Users are responsible for complying with applicable laws and website terms of service.
+> Users are responsible for complying with applicable laws and the website's terms of service.
 
 ---
 
