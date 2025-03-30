@@ -89,18 +89,19 @@ These will be addressed in future versions.
 
 ---
 
-## 📄 License
-
-This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.  
-See the [LICENSE](./LICENSE) file for more information.
-
----
 
 ## ⚠️ Disclaimer
 
 This tool is provided solely for **non-commercial, academic research, and demonstration** purposes. The maintainers do not guarantee the performance, uptime, or accuracy of the LLM responses, especially under heavy usage.
 
 > Users are responsible for complying with applicable laws and website terms of service.
+
+---
+
+## 📄 License
+
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.  
+See the [LICENSE](./LICENSE) file for more information.
 
 ---
 
