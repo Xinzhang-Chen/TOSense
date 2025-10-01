@@ -5,11 +5,15 @@
 
 **TOSense** is a Chrome browser extension that demonstrates a proof-of-concept workflow for analyzing website Terms of Service (TOS) using a large language model (LLM). It enables basic LLM-powered interaction with TOS content, designed for academic exploration, prototyping, and feedback-driven development.
 
-TOSense is part of the following research paper:
+TOSense is part of the following research papers:
 
-> **"ToSense: We Read, You Click"**\
+> **"TOSense: We Read, You Click"**\
 > *Xinzhang Chen, Hassan Ali, Arash Shaghaghi, Salil S. Kanhere, Sanjay Jha*\
-> *Under review at IEEE/IFIP DSN 2025*
+> IEEE/IFIP DSN (Dependable Systems and Networks) 2025 — [IEEE Xplore abstract](https://ieeexplore.ieee.org/abstract/document/11068347)
+
+> **"Demo: TOSense – What Did You Just Agree to?"**\
+> *Xinzhang Chen, Hassan Ali, Arash Shaghaghi, Salil S. Kanhere, Sanjay Jha*\
+> IEEE LCN (Local Computer Networks) 2025 — [IEEE Xplore abstract](https://ieeexplore.ieee.org/abstract/document/11146330)
 
 > ⚠️ This is a **proof-of-concept** version. The current release focuses on demonstrating the workflow and integration with an external server hosting our LLM backend.
 
@@ -17,15 +21,16 @@ TOSense is part of the following research paper:
 
 ## ✨ Key Features
 
-- 🧠 Simple LLM-based interface for querying Terms of Service
-- 🔄 Communicates with a backend server to demonstrate the TOS-to-LLM pipeline
-- 🛠️ Ideal for research demonstrations and future feature prototyping
+- Simple LLM-based interface for querying Terms of Service
+- **On-page ToS link detection** using `tosLinkScorer`
+- Communicates with a backend server to demonstrate the TOS-to-LLM pipeline
+- Ideal for research demonstrations and future feature prototyping
 
 ---
 
 ## 🚀 Installation
 
-### 📺 Installation Video  
+### Installation Video  
 
 https://github.com/user-attachments/assets/f47141f4-f1ca-42b9-a3ff-69ac477b2c8f
 
@@ -45,7 +50,7 @@ https://github.com/user-attachments/assets/f47141f4-f1ca-42b9-a3ff-69ac477b2c8f
 
 ## ℹ️ How to Use
 
-### 📺 Usage Demo
+### Usage Demo
 
 https://github.com/user-attachments/assets/67a9b9cc-6e47-41c1-a8fa-96fbdab6213c
 
@@ -59,33 +64,63 @@ https://github.com/user-attachments/assets/67a9b9cc-6e47-41c1-a8fa-96fbdab6213c
 
 > ⚠️ The current server is hosted on a low-spec testing server. Expect possible delays or limited performance in LLM responses. Server will be adjusted in the next iteration.
 
-> ⚠️ Please note that the provided version will not use the ToS content extract from the current page; all the answers returned from the server will base on our pre-loaded
-> LinkedIn ToS document. (Due to computing power limitations)
+---
+
+## Architecture Overview
+
+```txt
+          ┌──────────────────────┐
+          │  Web Page (DOM)      │
+          │  <a> … footer/nav …  │
+          └──────────┬───────────┘
+                     │
+                     │  tosLinkScorer
+                     │  (rank likely ToS links)
+                     ▼
+┌──────────────┐     popup UI      ┌───────────────┐
+│  TOSense     │──────────────────►│   Backend     │
+│  Extension   │   query / queue   │   Server      │
+└──────────────┘                   └───────────────┘
+
+```
+- The extension does client-side scoring to find candidate legal pages.
+- All Q&A and indexing happen in a single Backend.
 
 ---
 
-## 🧠 Architecture Overview
+## 🔎 `tosLinkScorer` (overview)
 
-```txt
-┌────────────┐     Sends Request (User Prompt)     ┌────────────┐
-│  TOSense   ├────────────────────────────────────►│   Backend  │
-│  (Chrome)  │◄────────────────────────────────────┤   Server   │
-└────────────┘        Returns Response             └────────────┘
-       │                                                  ▲
-       └─ Page Context [❌ Not supported in this version]─┘
+A lightweight, explainable heuristic that ranks links most likely to be ToS/Privacy/Legal.
 
-```
+**Signals & Weights**
+- **Positive (+):** `pathExact` (+6), `pathContains` (+4), `textExact` (+5), `textContains` (+3), `ariaOrTitle` (+2), `footer` (+2), `headerOrNav` (+1), `query` (+1)  
+- **Negative (–):** `promo` (–5), `refund` (–4), `careersBlog` (–3), `badExt` (–2), `dateLike` (–1)  
+- **Threshold:** `WEIGHTS.threshold = 10` (links below this are discarded)
+
+**How it matches**
+- **Path exact:** strict match on fixed slugs (e.g., `/terms-of-service`, `/privacy-policy`); *no “and/&” flexibility here*.  
+- **Path contains / anchor text / aria-title / query:** flexible regex tolerates spacing and **“and/&”** variants (e.g., `terms[ *](and|&)[ *]conditions`).  
+- **Placement boosts:** adds `+2` if in **footer**, else `+1` if in **header/nav** (mutually exclusive).
+
+**Negatives**
+- `promo`, `refund`, `careersBlog`: penalize if matched in path or text.  
+- `badExt`: penalize if URL path ends with unwanted extensions (pdf/docx/pptx).  
+- `dateLike`: small penalty if path or text looks like a date.  
+
+**Per-page selection**
+1. Score every `<a href>`.  
+2. Keep the **highest score per URL with hash removed**.  
+3. Filter by threshold → sort desc → return **top-N** (default 5) as `{ href, text, score, breakdown }`.  
 
 ---
 
 ## 🛑 Current Limitations
 
-- ❌ Does not detect or extract TOS from arbitrary web pages (but we already have the key component; more info checkout [tos-crawl](https://github.com/Xinzhang-Chen/tos-crawl))
-- ❌ Does not provide fast access to pre-crawled TOS repositories
-- 🐢 It relies on a low-powered backend for LLM responses
-- 🌐 LLM model is a reduced version for performance reasons
+- **No crawling/indexing inside the extension**: discovery is client-side; extraction and embeddings run on an external backend (see [tos-crawl](https://github.com/Xinzhang-Chen/tos-crawl)).
+- **Backend capacity & model size**: current demo backend is low-powered and uses a reduced LLM, which may affect speed and answer quality.
+- **Content variability**: geo/language gates, PDFs, and heavy client-side rendering can degrade backend extraction quality.
 
-The next version of the tool will focus on addressing these limitations.
+_Planned work will address these limitations in subsequent iterations._
 
 ---
 
